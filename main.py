@@ -3,6 +3,7 @@ from vk import VkPhotos
 from yandex_disk import YandexDisk
 import time
 import json
+import os
 
 def get_photo_data(vk, albums, filename="photos_data.json", **kwargs):
     photos = {}
@@ -48,29 +49,28 @@ def backup_album(disk, photos, album_id, max_count=5, clear=False):
 
 if __name__ == "__main__":
     # create objects
-    root = "netology_upload/vk/"
+    root = "loads/vk/"
     ya_disk = YandexDisk(tokens.YANDEX_TOKEN, root)
     vk = VkPhotos(tokens.VK_TOKEN)
 
-    # test loading file from hard drive
-    # source_path = os.path.join(os.getcwd(), "files")
-    # filename = "new.txt"
+    # # loading file from hard drive
+    # source_path = os.path.join(os.getcwd(), "test_upload_from_hard_drive")
+    # filename = "test_file.txt"
     # ya_disk.upload_file(filename, os.path.join(source_path, filename))
-
-    # test loading directory from hard drive
-    # dir_name = "new"
+    #
+    # # loading directory from hard drive
+    # dir_name = "test_folder"
     # ya_disk.upload_dir(dir_name, os.path.join(source_path, dir_name))
 
-    # korovin_id = 552934290
-    # durov_id = 1
-    # vk_api_id = -1
 
     albums = ["profile", "wall"]
     filename = "photos_data.json"
     # get photo data from VK and save to file "photos_data.json"
+    # parameter "count" is how many photos to get from VK
     get_photo_data(vk, albums, filename, **{"owner_id": tokens.MY_VK_ID, "count": 2})
 
     # get photos data from "photos_data.json" and upload photos to yandex disk
+    # "max_count" is maximum count of photos to load to yandex disk
     with open(file=filename, mode="r") as data_file:
         print(f"Photos data file '{filename}' opened")
         backup_photos(ya_disk, json.load(data_file), max_count=2, clear=True)
